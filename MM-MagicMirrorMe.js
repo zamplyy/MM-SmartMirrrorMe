@@ -168,5 +168,27 @@ Module.register("MM-MagicMirrorMe", {
 			this.sendSocketNotification("SET_LAYOUT", modules);
 
 		}
+		else if (notification === "SHOW_MODULE"){
+			MM.getModules().exceptModule(this).enumerate(function(module) {
+				if(module.data.name == payload){
+					module.show(1000, function() {
+						//Module hidden.
+					});
+				}
+			});
+			
+
+		}
+		else if (notification === "HIDE_MODULE"){
+			MM.getModules().exceptModule(this).enumerate(function(module) {
+				if(module.data.name == payload){
+					module.hide(1000, function() {
+						//Module hidden.
+					});
+				}
+			});
+
+		}
+		
 	},
 });

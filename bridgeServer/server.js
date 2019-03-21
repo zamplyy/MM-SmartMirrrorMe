@@ -24,6 +24,16 @@ websocket.on('connection', (socket) => {
         socket.emit('message', 'Your socket id: ' + socket.id)
     });
 
+    socket.on('hide', (message) => {
+        console.log('hide ' + message)
+        mmSocket.emit('mmHideModule', message)
+    });
+
+    socket.on('show', (message) => {
+        console.log('show ' + message)
+        mmSocket.emit('mmShowModule', message)
+    });
+
     socket.on('restart', (message) => {
         console.log('restart ' + message)
         console.log('Need to translate and forward to MM')

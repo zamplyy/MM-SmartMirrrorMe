@@ -42,6 +42,18 @@ module.exports = NodeHelper.create({
 				this.sendSocketNotification("GET_LAYOUT");
 			});
 
+			socket.on('mmShowModule', (message) => {
+
+				this.sendSocketNotification("SHOW_MODULE", message);
+			});
+
+			socket.on('mmHideModule', (message) => {
+
+				this.sendSocketNotification("HIDE_MODULE", message);
+			});
+
+			
+
 		});
 
 	},
