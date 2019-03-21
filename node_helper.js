@@ -51,6 +51,10 @@ module.exports = NodeHelper.create({
 
 				this.sendSocketNotification("HIDE_MODULE", message);
 			});
+			socket.on('mmChangePosition', (message) => {
+
+				this.sendSocketNotification("CHANGE_POSITION", message);
+			});
 
 			
 
