@@ -27,16 +27,22 @@ module.exports = NodeHelper.create({
 	openBridgeSocket(){
 
 		server.listen(18005, () => console.log('---server, listening on port 18005---'));
-
+		global.superSocket = ""
 		// The event will be called when a client is connected.
 		websocket.on('connection', (socket) => {
 			console.log('A client just joined on', socket.id);
+			global.superSocket = socket
 
-				socket.on('message', (message) => {
-					console.log(message)
-				});
-
+			socket.on('message', (message) => {
+				console.log(message)
 			});
+
+			socket.on('mmGetLayout', (message) => {
+
+				this.sendSocketNotification("GET_LAYOUT");
+			});
+
+		});
 
 	},
 
@@ -53,6 +59,9 @@ module.exports = NodeHelper.create({
 			console.log("Working notification system. Notification:", notification, "payload: ", payload);
 			// Send notification
 			this.sendNotificationTest(this.anotherFunction()); //Is possible send objects :)
+		}
+		else if (notification === "SET_LAYOUT"){
+			global.superSocket.emit('mmSetLayout', payload)
 		}
 	},
 

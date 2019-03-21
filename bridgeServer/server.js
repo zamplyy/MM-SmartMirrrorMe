@@ -11,8 +11,13 @@ server.listen(18000, () => console.log('Starting Bridge server, listening on por
 // The event will be called when a client is connected.
 websocket.on('connection', (socket) => {
     console.log('A client just joined on', socket.id);
+
     const mmSocket = io("http://127.0.0.1:18005");
-    mmSocket.emit('message', '--TEST--ASD--')
+
+    mmSocket.on('mmSetLayout', (message) => {
+        console.log(message)
+        socket.emit('layout', message)
+    });
 
     socket.on('message', (message) => {
         console.log(message)
@@ -40,7 +45,7 @@ websocket.on('connection', (socket) => {
 
     socket.on('getLayout', (message) => {
         console.log('getLayout')
-        console.log('Need to translate and forward to MM')
+        mmSocket.emit('mmGetLayout')
     });
 
     socket.on('installModule', (message) => {

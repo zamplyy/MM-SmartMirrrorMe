@@ -153,5 +153,20 @@ Module.register("MM-MagicMirrorMe", {
 			this.dataNotification = payload;
 			this.updateDom();
 		}
+		else if (notification === "GET_LAYOUT"){
+			let modules = []
+			MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
+				var obj = {}
+				var moduleName = module.data.name
+				var modulePosition = module.data.position
+				obj.name = moduleName
+				obj.position = modulePosition
+				
+				modules.push(obj)
+
+			});
+			this.sendSocketNotification("SET_LAYOUT", modules);
+
+		}
 	},
 });
