@@ -85,34 +85,8 @@ Module.register("MM-MagicMirrorMe", {
 	},
 
 	getDom: function() {
-		var self = this;
-
-		// create element wrapper for show into the module
 		var wrapper = document.createElement("div");
-		// If this.dataRequest is not empty
-		if (this.dataRequest) {
-			var wrapperDataRequest = document.createElement("div");
-			// check format https://jsonplaceholder.typicode.com/posts/1
-			wrapperDataRequest.innerHTML = this.dataRequest.title;
-
-			var labelDataRequest = document.createElement("label");
-			// Use translate function
-			//             this id defined in translations files
-			labelDataRequest.innerHTML = this.translate("TITLE");
-
-
-			wrapper.appendChild(labelDataRequest);
-			wrapper.appendChild(wrapperDataRequest);
-		}
-
-		// Data from helper
-		if (this.dataNotification) {
-			var wrapperDataNotification = document.createElement("div");
-			// translations  + datanotification
-			wrapperDataNotification.innerHTML =  this.translate("UPDATE") + ": " + this.dataNotification.date;
-
-			wrapper.appendChild(wrapperDataNotification);
-		}
+		wrapper.innerHTML = "Hello World!";
 		return wrapper;
 	},
 
@@ -217,14 +191,13 @@ Module.register("MM-MagicMirrorMe", {
 					},
 				}
 			);
-		}
-
-		//SHOW ALL
-		MM.getModules().exceptModule(this).enumerate(function(module) {
-			module.show(1000, function() {
-					//Module hidden.
+			//SHOW ALL
+			MM.getModules().exceptModule(this).enumerate(function(module) {
+				module.show(1000, function() {
+						//Module hidden.
+				});
 			});
-		});
-		//ALL SHOWN
+			//ALL SHOWN
+		}
 	},
 });
