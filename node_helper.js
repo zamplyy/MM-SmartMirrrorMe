@@ -4,10 +4,41 @@
  * By 
  * MIT Licensed.
  */
+const express = require('express');
+const http = require('http')
+const socketio = require('socket.io');
+
+const app = express();
+const server = http.Server(app);
+const websocket = socketio(server);
+
 
 var NodeHelper = require("node_helper");
 
 module.exports = NodeHelper.create({
+
+
+	start(){
+
+		//Started node_helper
+		this.openBridgeSocket();
+	},
+
+	openBridgeSocket(){
+
+		server.listen(18005, () => console.log('---server, listening on port 18005---'));
+
+		// The event will be called when a client is connected.
+		websocket.on('connection', (socket) => {
+			console.log('A client just joined on', socket.id);
+
+				socket.on('message', (message) => {
+					console.log(message)
+				});
+
+			});
+
+	},
 
 	// Override socketNotificationReceived method.
 

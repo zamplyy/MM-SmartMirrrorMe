@@ -1,6 +1,7 @@
 var express = require('express');
 var http = require('http')
 var socketio = require('socket.io');
+const io = require('socket.io-client');
 
 var app = express();
 var server = http.Server(app);
@@ -10,6 +11,8 @@ server.listen(18000, () => console.log('Starting Bridge server, listening on por
 // The event will be called when a client is connected.
 websocket.on('connection', (socket) => {
     console.log('A client just joined on', socket.id);
+    const mmSocket = io("http://127.0.0.1:18005");
+    mmSocket.emit('message', '--TEST--ASD--')
 
     socket.on('message', (message) => {
         console.log(message)
@@ -36,7 +39,7 @@ websocket.on('connection', (socket) => {
     });
 
     socket.on('getLayout', (message) => {
-        console.log('getLayout ' + message)
+        console.log('getLayout')
         console.log('Need to translate and forward to MM')
     });
 
