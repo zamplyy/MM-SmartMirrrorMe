@@ -52,8 +52,21 @@ module.exports = NodeHelper.create({
 				this.sendSocketNotification("HIDE_MODULE", message);
 			});
 			socket.on('mmChangePosition', (message) => {
+				
+				const arrayToObject = (array, keyField) =>
+				array.reduce((obj, item) => {
+					obj[item[keyField]] = item
+					return obj
+				}, {})
+                
+				const modulesObject = arrayToObject(message, "name")
 
-				this.sendSocketNotification("CHANGE_POSITION", message);
+				Object.keys(modulesObject).forEach(function(item) {
+					delete modulesObject[item].name;
+					modulesObject[item].visible = 'true';
+				  });
+				
+				this.sendSocketNotification("CHANGE_POSITION", modulesObject);
 			});
 
 			

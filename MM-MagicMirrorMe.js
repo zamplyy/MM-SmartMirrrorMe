@@ -171,26 +171,7 @@ Module.register("MM-MagicMirrorMe", {
 			});
 			//ALL HIDDEN
 			
-			this.sendNotification('CHANGE_POSITIONS', 
-				modules = {
-					'clock':{
-						visible: 'true',
-						position: 'top_right',
-					},
-					'calendar':{
-						visible: 'true',
-						position: 'bottom_right',
-					},
-					'compliments':{
-						visible: 'true',
-						position: 'top_left',
-					},
-					'currentweather':{
-						visible: 'true',
-						position: 'bottom_left',
-					},
-				}
-			);
+			this.sendNotification('CHANGE_POSITIONS', payload);
 			//SHOW ALL
 			MM.getModules().exceptModule(this).enumerate(function(module) {
 				module.show(1000, function() {
