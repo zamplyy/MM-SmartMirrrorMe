@@ -24,6 +24,12 @@ websocket.on('connection', (socket) => {
         socket.emit('message', 'Your socket id: ' + socket.id)
     });
 
+    socket.on('toggleIp', (message) => {
+        console.log("toggleIp" + message)
+        mmSocket.emit('mmToggleIp', message)
+    });
+
+
     socket.on('hide', (message) => {
         console.log('hide ' + message)
         mmSocket.emit('mmHideModule', message)

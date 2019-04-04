@@ -60,9 +60,17 @@ Module.register("MM-MagicMirrorMe", {
 	},
 
 	getDom: function() {
-		var wrapper = document.createElement("div");
-		wrapper.innerHTML = "SmartMirror IP: " + ipAddress;
-		return wrapper;
+
+		if(typeof ipAddress === "undefined"){
+			var wrapper = document.createElement("div");
+			wrapper.innerHTML = "SmartMirror IP: xxx" ;
+			return wrapper;
+		} else {
+			var wrapper = document.createElement("div");
+			wrapper.innerHTML = "SmartMirror IP: " + ipAddress;
+			return wrapper;
+		}
+		
 	},
 
 	getScripts: function() {
@@ -122,22 +130,40 @@ Module.register("MM-MagicMirrorMe", {
 			this.updateDom();
 		}
 		else if (notification === "SHOW_MODULE"){
-			MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
-				if(module.data.name == payload){
+			if (payload == true){
+				MM.getModules().withClass('MM-MagicMirrorMe').enumerate(function(module) {
 					module.show(1000, function() {
 						//Module hidden.
 					});
-				}
-			});
+				});
+			}
+			else {
+				MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
+					if(module.data.name == payload){
+						module.show(1000, function() {
+							//Module hidden.
+						});
+					}
+				});
+			}
 		}
 		else if (notification === "HIDE_MODULE"){
-			MM.getModules().exceptModule(this).enumerate(function(module) {
-				if(module.data.name == payload){
+			if (payload == false){
+				MM.getModules().withClass('MM-MagicMirrorMe').enumerate(function(module) {
 					module.hide(1000, function() {
 						//Module hidden.
 					});
-				}
-			});
+				});
+			}
+			else{
+				MM.getModules().exceptModule(this).enumerate(function(module) {
+					if(module.data.name == payload){
+						module.hide(1000, function() {
+							//Module hidden.
+						});
+					}
+				});
+			}
 		}
 		else if (notification === "HIDE_ALL"){
 			MM.getModules().exceptModule(this).enumerate(function(module) {

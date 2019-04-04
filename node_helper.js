@@ -62,6 +62,16 @@ module.exports = NodeHelper.create({
 				this.sendSocketNotification("HIDE_ALL");
 			});
 
+			socket.on('mmToggleIp', (message) => {
+				console.log("mmToggleIp " + message)
+				if(message == false){
+					this.sendSocketNotification("HIDE_MODULE", message);
+				} else {
+					this.sendSocketNotification("SHOW_MODULE", message)
+				}
+			});
+
+			
 			
 			socket.on('mmChangePosition', (message) => {
 				
