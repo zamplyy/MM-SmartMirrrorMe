@@ -8,3 +8,9 @@
  * Custom here your css module
  *
  */
+
+div {
+    font-family: Roboto, sans-serif;
+    font-weight: 100;
+    color: #fff;
+}

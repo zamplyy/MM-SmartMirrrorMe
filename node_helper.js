@@ -104,9 +104,11 @@ module.exports = NodeHelper.create({
 			global.superSocket.emit('mmSetLayout', payload)
 		}
 		else if (notification === "getIp"){
+			console.log("getIp")
 			var networkInterfaces = os.networkInterfaces( );
-			console.log("Need to find ipadress")
-			console.log("These to choose from ", networkInterfaces)
+			var ipAddress = networkInterfaces.wlan0[0].address;
+			console.log("respoe from getIp: " + ipAddress)
+			this.sendSocketNotification("setIp", ipAddress)
 		}
 	},
 

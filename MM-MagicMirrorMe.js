@@ -61,7 +61,7 @@ Module.register("MM-MagicMirrorMe", {
 
 	getDom: function() {
 		var wrapper = document.createElement("div");
-		wrapper.innerHTML = "SmartMirror IP: " + ipAdress;
+		wrapper.innerHTML = "SmartMirror IP: " + ipAddress;
 		return wrapper;
 	},
 
@@ -118,7 +118,8 @@ Module.register("MM-MagicMirrorMe", {
 
 		}
 		else if (notification === "setIp"){
-			ipAdress = payload;
+			ipAddress = payload;
+			this.updateDom();
 		}
 		else if (notification === "SHOW_MODULE"){
 			MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
