@@ -17,7 +17,7 @@ Module.register("MM-MagicMirrorMe", {
 
 	start: function() {
 		var self = this;
-		var dataRequest = null;
+		var ipAdress = null;
 		var dataNotification = null;
 
 		//Flag for check if module is loaded
@@ -37,32 +37,7 @@ Module.register("MM-MagicMirrorMe", {
 	 *
 	 */
 	getData: function() {
-		var self = this;
-
-		var urlApi = "https://jsonplaceholder.typicode.com/posts/1";
-		var retry = true;
-
-		var dataRequest = new XMLHttpRequest();
-		dataRequest.open("GET", urlApi, true);
-		dataRequest.onreadystatechange = function() {
-			console.log(this.readyState);
-			if (this.readyState === 4) {
-				console.log(this.status);
-				if (this.status === 200) {
-					self.processData(JSON.parse(this.response));
-				} else if (this.status === 401) {
-					self.updateDom(self.config.animationSpeed);
-					Log.error(self.name, this.status);
-					retry = false;
-				} else {
-					Log.error(self.name, "Could not load data.");
-				}
-				if (retry) {
-					self.scheduleUpdate((self.loaded) ? -1 : self.config.retryDelay);
-				}
-			}
-		};
-		dataRequest.send();
+		this.sendSocketNotification("getIp")
 	},
 
 
@@ -86,7 +61,7 @@ Module.register("MM-MagicMirrorMe", {
 
 	getDom: function() {
 		var wrapper = document.createElement("div");
-		wrapper.innerHTML = "Hello World!";
+		wrapper.innerHTML = "SmartMirror IP: " + ipAdress;
 		return wrapper;
 	},
 
@@ -142,16 +117,17 @@ Module.register("MM-MagicMirrorMe", {
 			this.sendSocketNotification("SET_LAYOUT", modules);
 
 		}
+		else if (notification === "setIp"){
+			ipAdress = payload;
+		}
 		else if (notification === "SHOW_MODULE"){
-			MM.getModules().exceptModule(this).enumerate(function(module) {
+			MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
 				if(module.data.name == payload){
 					module.show(1000, function() {
 						//Module hidden.
 					});
 				}
 			});
-			
-
 		}
 		else if (notification === "HIDE_MODULE"){
 			MM.getModules().exceptModule(this).enumerate(function(module) {
@@ -162,20 +138,30 @@ Module.register("MM-MagicMirrorMe", {
 				}
 			});
 		}
-		else if (notification === "CHANGE_POSITION"){
-			//HIDE ALL
+		else if (notification === "HIDE_ALL"){
 			MM.getModules().exceptModule(this).enumerate(function(module) {
 				module.hide(1000, function() {
-						//Module hidden.
+					//Module hidden.
+				});
+				
+			});
+		}
+		else if (notification === "SHOW_ALL"){
+			MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
+				module.show(1000, function() {
 				});
 			});
-			//ALL HIDDEN
-			
-			this.sendNotification('CHANGE_POSITIONS', payload);
+		}
+
+
+		else if (notification === "CHANGE_POSITION"){
+			self = this
+		
+			this.sendNotification('CHANGE_POSITIONS', modules = payload);
 			//SHOW ALL
-			MM.getModules().exceptModule(this).enumerate(function(module) {
+			MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
 				module.show(1000, function() {
-						//Module hidden.
+					//Module hidden.
 				});
 			});
 			//ALL SHOWN

@@ -7,6 +7,8 @@
 const express = require('express');
 const http = require('http')
 const socketio = require('socket.io');
+const os = require('os');
+
 
 const app = express();
 const server = http.Server(app);
@@ -51,6 +53,16 @@ module.exports = NodeHelper.create({
 
 				this.sendSocketNotification("HIDE_MODULE", message);
 			});
+
+			socket.on('mmShowAll', (message) => {
+				this.sendSocketNotification("SHOW_ALL");
+			});
+
+			socket.on('mmHideAll', (message) => {
+				this.sendSocketNotification("HIDE_ALL");
+			});
+
+			
 			socket.on('mmChangePosition', (message) => {
 				
 				const arrayToObject = (array, keyField) =>
@@ -63,16 +75,15 @@ module.exports = NodeHelper.create({
 
 				Object.keys(modulesObject).forEach(function(item) {
 					delete modulesObject[item].name;
-					modulesObject[item].visible = 'true';
-				  });
+					modulesObject[item].visible = 'false';
+				});
+
+				console.log(modulesObject)
 				
 				this.sendSocketNotification("CHANGE_POSITION", modulesObject);
 			});
 
-			
-
 		});
-
 	},
 
 	// Override socketNotificationReceived method.
@@ -91,6 +102,11 @@ module.exports = NodeHelper.create({
 		}
 		else if (notification === "SET_LAYOUT"){
 			global.superSocket.emit('mmSetLayout', payload)
+		}
+		else if (notification === "getIp"){
+			var networkInterfaces = os.networkInterfaces( );
+			console.log("Need to find ipadress")
+			console.log("These to choose from ", networkInterfaces)
 		}
 	},
 
