@@ -75,6 +75,9 @@ module.exports = NodeHelper.create({
 					'README.md',
 					'default',
 					'node_modules',
+					'alert',
+					'defaultmodules.js',
+					'updatenotification',
 					]
 
 				modules = modules.filter( function( el ) {
