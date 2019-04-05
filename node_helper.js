@@ -62,6 +62,10 @@ module.exports = NodeHelper.create({
 				this.sendSocketNotification("HIDE_ALL");
 			});
 
+			socket.on('mmGetModuleConfig', (message) => {
+				this.sendSocketNotification("GET_MODULE_CONFIG", message);
+			});
+
 			socket.on('mmToggleIp', (message) => {
 				console.log("mmToggleIp " + message)
 				if(message == false){
@@ -71,8 +75,6 @@ module.exports = NodeHelper.create({
 				}
 			});
 
-			
-			
 			socket.on('mmChangePosition', (message) => {
 				
 				const arrayToObject = (array, keyField) =>
@@ -112,6 +114,9 @@ module.exports = NodeHelper.create({
 		}
 		else if (notification === "SET_LAYOUT"){
 			global.superSocket.emit('mmSetLayout', payload)
+		}
+		else if (notification === "SET_MODULE_CONFIG"){
+			global.superSocket.emit('mmSetModuleConfig', payload)
 		}
 		else if (notification === "getIp"){
 			console.log("getIp")

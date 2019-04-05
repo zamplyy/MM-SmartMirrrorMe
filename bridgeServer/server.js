@@ -15,8 +15,13 @@ websocket.on('connection', (socket) => {
     const mmSocket = io("http://127.0.0.1:18005");
 
     mmSocket.on('mmSetLayout', (message) => {
-        console.log(message)
+        console.log('From MM mmSetLayout : ' +message)
         socket.emit('layout', message)
+    });
+
+    mmSocket.on('mmSetModuleConfig', (message) => {
+        console.log('From MM mmSetModuleConfig : ' +message)
+        socket.emit('setModuleConfig', message)
     });
 
     socket.on('message', (message) => {
@@ -29,6 +34,10 @@ websocket.on('connection', (socket) => {
         mmSocket.emit('mmToggleIp', message)
     });
 
+    socket.on('getModuleConfig', (message) => {
+        console.log("getModuleConfig" + message)
+        mmSocket.emit('mmGetModuleConfig', message)
+    });
 
     socket.on('hide', (message) => {
         console.log('hide ' + message)

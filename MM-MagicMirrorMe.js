@@ -179,8 +179,17 @@ Module.register("MM-MagicMirrorMe", {
 				});
 			});
 		}
-
-
+		else if (notification === "GET_MODULE_CONFIG"){
+			let configObject = 0
+			MM.getModules().enumerate(function(module) {
+				if (module.data.name == payload){
+					configObject = module.config
+				}
+			});
+			if (configObject != 0){
+				this.sendSocketNotification("SET_MODULE_CONFIG", configObject);
+			}
+		}
 		else if (notification === "CHANGE_POSITION"){
 			self = this
 		
