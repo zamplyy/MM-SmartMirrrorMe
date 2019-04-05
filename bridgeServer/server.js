@@ -24,6 +24,11 @@ websocket.on('connection', (socket) => {
         socket.emit('setModuleConfig', message)
     });
 
+    mmSocket.on('mmSetInstalledModules', (message) => {
+        console.log('From MM mmSetInstalledModules : ' +message)
+        socket.emit('setInstalledModules', message)
+    });
+
     socket.on('message', (message) => {
         console.log(message)
         socket.emit('message', 'Your socket id: ' + socket.id)
@@ -37,6 +42,11 @@ websocket.on('connection', (socket) => {
     socket.on('getModuleConfig', (message) => {
         console.log("getModuleConfig" + message)
         mmSocket.emit('mmGetModuleConfig', message)
+    });
+
+    socket.on('getInstalledModules', (message) => {
+        console.log("getInstalledModules" + message)
+        mmSocket.emit('mmGetInstalledModules', message)
     });
 
     socket.on('hide', (message) => {

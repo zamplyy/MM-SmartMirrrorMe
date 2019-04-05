@@ -8,7 +8,7 @@ const express = require('express');
 const http = require('http')
 const socketio = require('socket.io');
 const os = require('os');
-
+const fs = require('fs');
 
 const app = express();
 const server = http.Server(app);
@@ -64,6 +64,23 @@ module.exports = NodeHelper.create({
 
 			socket.on('mmGetModuleConfig', (message) => {
 				this.sendSocketNotification("GET_MODULE_CONFIG", message);
+			});
+
+			socket.on('mmGetInstalledModules', (message) => {
+				var modules = fs.readdirSync("../MagicMirror/modules/");
+				var defaultModules = fs.readdirSync("../MagicMirror/modules/default");
+				modules = modules.concat(defaultModules)
+				toRemove = ['MM-MagicMirrorMe',
+					'MMM-Dynamic-Modules',
+					'README.md',
+					'default',
+					'node_modules',
+					]
+
+				modules = modules.filter( function( el ) {
+					return toRemove.indexOf( el ) < 0;
+				  } );
+				  socket.emit("mmSetInstalledModules",modules)
 			});
 
 			socket.on('mmToggleIp', (message) => {
