@@ -75,6 +75,8 @@ module.exports = NodeHelper.create({
 				simpleGit.clone(message.Url)
 					.then( () => console.log('finished'));
 
+
+				//Installed in directory
 			});
 
 			socket.on('mmGetModuleConfig', (message) => {
