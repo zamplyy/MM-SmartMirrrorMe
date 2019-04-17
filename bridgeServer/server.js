@@ -94,7 +94,7 @@ websocket.on('connection', (socket) => {
         console.log('installModule ')
         console.log('Name is : ' + message.name)
         console.log('Url is : ' + message.Url)
-        console.log('Need to translate and forward to MM')
+        mmSocket.emit('mmInstallModule', message)
     });
     
 

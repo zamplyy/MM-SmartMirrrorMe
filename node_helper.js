@@ -10,6 +10,12 @@ const socketio = require('socket.io');
 const os = require('os');
 const fs = require('fs');
 
+var moduleFolderPath = __dirname + '/'
+var a = __dirname.split('/');
+var moduleFolderPath = moduleFolderPath.replace(a[a.length-1] + '/', '');
+
+const simpleGit = require('simple-git')(moduleFolderPath);
+
 const app = express();
 const server = http.Server(app);
 const websocket = socketio(server);
@@ -60,6 +66,15 @@ module.exports = NodeHelper.create({
 
 			socket.on('mmHideAll', (message) => {
 				this.sendSocketNotification("HIDE_ALL");
+			});
+
+			socket.on('mmInstallModule', (message) => {
+
+				console.log('MM Should install this module: ', message);
+
+				simpleGit.clone(message.Url)
+					.then( () => console.log('finished'));
+
 			});
 
 			socket.on('mmGetModuleConfig', (message) => {
