@@ -9,6 +9,7 @@ const http = require('http')
 const socketio = require('socket.io');
 const os = require('os');
 const fs = require('fs');
+const util = require('util');
 
 var moduleFolderPath = __dirname + '/'
 var a = __dirname.split('/');
@@ -77,21 +78,20 @@ module.exports = NodeHelper.create({
 				//Then it should write modules : []
 				//Then it should write suffix
 				
-				var prefix = ""
-				var suffix = ""
-				fs.readFile(__dirname + '/prefix.txt', 'utf8', function(err, contents) {
-					if(err) {
-						console.log(err)
-					}
-					prefix = contents
-				});
+				let prefix = ""
+				let suffix = ""
 
-				fs.readFile(__dirname + '/suffix.txt', 'utf8', function(err, contents) {
-					if(err) {
-						console.log(err)
-					}
-					suffix = contents
-				});
+				try {  
+					prefix = fs.readFileSync(__dirname + '/prefix.txt', 'utf8');
+				} catch(e) {
+					console.log('Error:', e.stack);
+				}
+
+				try {  
+					suffix = fs.readFileSync(__dirname + '/suffix.txt', 'utf8');
+				} catch(e) {
+					console.log('Error:', e.stack);
+				}
 
 				var prefixModules = [
 					{
@@ -119,13 +119,47 @@ module.exports = NodeHelper.create({
 					prefixModules.push(module)
 				});
 
-				configFile = prefix + prefixModules.toString() + suffix
+				//ADD EXTRA CONFIG DETAILS FOR CALENDAR AND WEATHER FOR NOW
 
+				prefixModules.forEach(module => {
 
-				fs.writeFile(__dirname + '/config.txt', configFile , (err) => {  
+					if (module.module == 'calendar') {
+						module.header = 'SWE Holidays'
+						module.config = {
+							calendars : [ 
+								{
+									symbol : "calendar-check",
+									url : "https://www.calendarlabs.com/ical-calendar/ics/71/Sweden_Holidays.ics"
+								}
+							]
+						}
+					}
+					if (module.module == 'currentweather') {
+						module.config = {
+							location : "Karlstad",
+							locationID : "2701680",
+							appid : "2ea660f74981297e2329a05d0e9b0fd9",
+						}
+					}
+					
+				});
+
+				configFile = prefix + '\nmodules : ' +util.inspect(prefixModules, {depth:7}) + '\n' +suffix
+				
+				var configFolderPath = __dirname
+
+				var the_arr = configFolderPath.split('/');
+				the_arr.pop();
+				the_arr.pop();
+				configFolderPath = the_arr.join('/')
+
+				configFolderPath = configFolderPath + "/config"
+
+				fs.writeFile(configFolderPath + '/config.js', configFile , (err) => {  
 					if(err) {
 						console.log(err)
 					}
+					console.log('Wrote config to ' + configFolderPath )
 				});
 			});
 
