@@ -20,7 +20,6 @@ const app = express();
 const server = http.Server(app);
 const websocket = socketio(server);
 
-
 var NodeHelper = require("node_helper");
 
 module.exports = NodeHelper.create({
@@ -66,6 +65,68 @@ module.exports = NodeHelper.create({
 
 			socket.on('mmHideAll', (message) => {
 				this.sendSocketNotification("HIDE_ALL");
+			});
+
+			socket.on('mmRestart', (message) => {
+				require('child_process').exec('pm2 restart mm', function (msg) { console.log(msg) });
+			});
+
+			socket.on('mmSaveModules', (message) => {
+				console.log('saveModules')
+				//Should first write prefix to file
+				//Then it should write modules : []
+				//Then it should write suffix
+				
+				var prefix = ""
+				var suffix = ""
+				fs.readFile(__dirname + '/prefix.txt', 'utf8', function(err, contents) {
+					if(err) {
+						console.log(err)
+					}
+					prefix = contents
+				});
+
+				fs.readFile(__dirname + '/suffix.txt', 'utf8', function(err, contents) {
+					if(err) {
+						console.log(err)
+					}
+					suffix = contents
+				});
+
+				var prefixModules = [
+					{
+						module: "alert",
+					},
+					{
+						module: "updatenotification",
+						position: "top_bar"
+					},
+					{
+						module: "MM-MagicMirrorMe",
+						position: "bottom_left"
+					},
+					{
+						module: "MMM-Dynamic-Modules",
+					},
+				]
+
+				message.forEach(module => {
+					var pos = module.position
+					module.module = module.name
+					delete module.name
+					delete module.position
+					module.position = pos
+					prefixModules.push(module)
+				});
+
+				configFile = prefix + prefixModules.toString() + suffix
+
+
+				fs.writeFile(__dirname + '/config.txt', configFile , (err) => {  
+					if(err) {
+						console.log(err)
+					}
+				});
 			});
 
 			socket.on('mmInstallModule', (message) => {
@@ -158,9 +219,13 @@ module.exports = NodeHelper.create({
 		else if (notification === "getIp"){
 			console.log("getIp")
 			var networkInterfaces = os.networkInterfaces( );
-			var ipAddress = networkInterfaces.wlan0[0].address;
-			console.log("respoe from getIp: " + ipAddress)
-			this.sendSocketNotification("setIp", ipAddress)
+
+			if(networkInterfaces.wlan0 != undefined){
+				var ipAddress = networkInterfaces.wlan0[0].address;
+				console.log("respoe from getIp: " + ipAddress)
+				this.sendSocketNotification("setIp", ipAddress)
+			} 
+			
 		}
 	},
 

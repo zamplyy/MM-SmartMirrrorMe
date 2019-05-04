@@ -15,17 +15,17 @@ websocket.on('connection', (socket) => {
     const mmSocket = io("http://127.0.0.1:18005");
 
     mmSocket.on('mmSetLayout', (message) => {
-        console.log('From MM mmSetLayout : ' +message)
+        console.log('From MM mmSetLayout : ' ,message)
         socket.emit('layout', message)
     });
 
     mmSocket.on('mmSetModuleConfig', (message) => {
-        console.log('From MM mmSetModuleConfig : ' +message)
+        console.log('From MM mmSetModuleConfig : ' ,message)
         socket.emit('setModuleConfig', message)
     });
 
     mmSocket.on('mmSetInstalledModules', (message) => {
-        console.log('From MM mmSetInstalledModules : ' +message)
+        console.log('From MM mmSetInstalledModules : ' , message)
         socket.emit('setInstalledModules', message)
     });
 
@@ -70,8 +70,13 @@ websocket.on('connection', (socket) => {
     });
 
     socket.on('restart', (message) => {
-        console.log('restart ' + message)
-        console.log('Need to translate and forward to MM')
+        console.log('restart' + message)
+        mmSocket.emit('mmRestart', message)
+    });
+
+    socket.on('saveModules', (message) => {
+        console.log('saveModules' + message)
+        mmSocket.emit('mmSaveModules', message)
     });
 
     socket.on('brightness', (message) => {
@@ -80,8 +85,7 @@ websocket.on('connection', (socket) => {
     });
 
     socket.on('changePosition', (message) => {
-        console.log('changePosition ' + message)
-        
+        console.log('changePosition ' , message)
         mmSocket.emit('mmChangePosition', message)
     });
 
