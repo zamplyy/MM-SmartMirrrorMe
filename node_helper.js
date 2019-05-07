@@ -10,6 +10,7 @@ const socketio = require('socket.io');
 const os = require('os');
 const fs = require('fs');
 const util = require('util');
+const cp = require('child_process')
 
 var moduleFolderPath = __dirname + '/'
 var a = __dirname.split('/');
@@ -69,7 +70,8 @@ module.exports = NodeHelper.create({
 			});
 
 			socket.on('mmRestart', (message) => {
-				require('child_process').exec('pm2 restart mm', function (msg) { console.log(msg) });
+				cp.exec('pm2 stop server', function (msg) { console.log(msg) });
+				cp.exec('pm2 restart mm', function (msg) { console.log(msg) });
 			});
 
 			socket.on('mmSaveModules', (message) => {
@@ -260,6 +262,9 @@ module.exports = NodeHelper.create({
 				this.sendSocketNotification("setIp", ipAddress)
 			} 
 			
+		}
+		else if (notification === "START_SERVER"){
+			cp.exec('pm2 start server', function (msg) { console.log(msg) });
 		}
 	},
 

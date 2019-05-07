@@ -103,6 +103,12 @@ Module.register("MM-MagicMirrorMe", {
 		this.sendSocketNotification("MM-MagicMirrorMe-NOTIFICATION_TEST", data);
 	},
 
+	notificationReceived: function(notification, payload, sender) {
+		if (notification === "ALL_MODULES_STARTED"){
+			this.sendSocketNotification("START_SERVER");
+		}
+	},
+
 	// socketNotificationReceived from helper
 	socketNotificationReceived: function (notification, payload) {
 		if(notification === "MM-MagicMirrorMe-NOTIFICATION_TEST") {
@@ -110,6 +116,7 @@ Module.register("MM-MagicMirrorMe", {
 			this.dataNotification = payload;
 			this.updateDom();
 		}
+	
 		else if (notification === "GET_LAYOUT"){
 			let modules = []
 			MM.getModules().exceptModule(this).exceptWithClass(['alert','updatenotification', 'MMM-Dynamic-Modules']).enumerate(function(module) {
